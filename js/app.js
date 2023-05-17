@@ -2,6 +2,8 @@ const relationshipType = {
     0: {
         0: "Wife/Husband",
         1: "Daughter/Son",
+        2: "Grandaughter/Grandson",
+        3: "Great-grandaughter/Great-grandson"
     },
 
     1: {
@@ -81,7 +83,9 @@ function assert(condition, message) {
 // [Ancestral Depth][Descendant Depth]
 
 function getRelationship(ancestor_depth, descendant_depth, gender) {
-    let relation = relationshipType[ancestor_depth][descendant_depth].split("/")
+    let relation = relationshipType[ancestor_depth][descendant_depth]
+    if (relation) relation = relation.split("/")
+    else relation = ["Depth exceeded."]
     return relation.at(gender==Genders.Male && relation.length > 1)
 }
 
@@ -563,11 +567,6 @@ class Node extends Animated {
         Node.instances.push(this);
     }
 
-    setName(name) {
-        this.name = name;
-        this.nameObject.content = name
-        
-    }
 
     toJSON() {
         return {name: this.name, offset: this.offsetVector}
@@ -610,6 +609,12 @@ class Person extends Node {
         this.marked = false
         this.generateSprite();
         this.setName(name)
+    }
+
+    setName(name) {
+        this.name = name;
+        this.nameObject.content = name
+
     }
 
     toJSON() {
@@ -968,9 +973,8 @@ function createTemporaryTree() {
     const queenElizabeth2 = new Person("Queen Elizabeth II")
     const princePhilip = new Person("Prince Philip")
     const princessMargaret = new Person("Princess Margaret")
-    const camila = new Person("Camila")
     const charles = new Person("Charles")
-    const diana = new Person("Princess of Wales")
+    const diana = new Person("Diana")
     const anne = new Person("Anne")
     const princeAndrew = new Person("Prince Andrew")
     const princeEdward = new Person("Prince Edward")
@@ -988,7 +992,6 @@ function createTemporaryTree() {
     const charlesAndDiana = new Family(charles, diana)
     const harryAndMeghan = new Family(princeHarry, meghan)
     const catherineAndWilliam = new Family(princeWilliam, catherine)
-    const camilaAndCharles = new Family(charles, camila)
 
     kingGeorgeAndElizabeth.addChildren([queenElizabeth2, princessMargaret])
     princePhilipsAndElizabethII.addChildren([charles, anne, princeAndrew, princeEdward])
